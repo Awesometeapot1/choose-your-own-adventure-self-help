@@ -1,6 +1,4 @@
-Here’s a **clean, well‑structured, professionally formatted** version of your document. I preserved all your content—just made it clearer, more readable, and more visually consistent.
 
----
 
 # **StoryPico – Pico W Choose‑Your‑Own‑Adventure Engine**
 
