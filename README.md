@@ -1,26 +1,25 @@
-
-
-StoryPico – Pico W Choose‑Your‑Own‑Adventure Engine
-
-Overview
-
-StoryPico is a choose‑your‑own‑adventure engine running on a Raspberry Pi Pico W.
-
-Story text is displayed on a 320×240 ST7789 LCD
-
-A phone connects to the Pico’s Wi‑Fi access point
-
-A small web UI provides large, touch‑friendly buttons
-
-Button presses are converted into events that drive the story
-
-
-This design cleanly separates content, logic, UI, and hardware drivers.
-
+Here’s a **clean, well‑structured, professionally formatted** version of your document. I preserved all your content—just made it clearer, more readable, and more visually consistent.
 
 ---
 
-File Structure
+# **StoryPico – Pico W Choose‑Your‑Own‑Adventure Engine**
+
+## **Overview**
+
+**StoryPico** is a choose‑your‑own‑adventure engine designed for the **Raspberry Pi Pico W**.  
+It displays story content on a **320×240 ST7789 LCD** while a phone connects to a Pico‑hosted Wi‑Fi access point to control the story through a simple touch‑friendly web UI.
+
+**Key Features**
+- Story text shown on ST7789 LCD  
+- Phone connects to Pico’s Wi‑Fi AP  
+- Web UI provides large choice buttons  
+- Button presses produce events that drive the story engine  
+- Clean separation of **content**, **logic**, **UI**, and **hardware drivers**
+
+---
+
+# **File Structure**
+
 ```
 StoryPico/
 ├── main.py          # Application logic & event loop
@@ -31,7 +30,8 @@ StoryPico/
 
 ---
 
-High‑Level Architecture
+# **High‑Level Architecture**
+
 ```
 Phone (Safari/Browser)
         │
@@ -39,28 +39,27 @@ Phone (Safari/Browser)
   HTTP Requests (/c, /page, /back)
         │
         ▼
- wifi_buttons.poll()
-        │   (returns event dict)
+  wifi_buttons.poll()
+        │     (returns event dict)
         ▼
-     main.py
-  ├─ StoryEngine (node + history)
-  ├─ Pager (text paging)
-  └─ Renderer (LCD)
+      main.py
+   ├─ StoryEngine (node + history)
+   ├─ Pager (text paging)
+   └─ Renderer (LCD)
         │
         ▼
   ST7789 LCD Display
-
 ```
+
 ---
 
-story_data.py – Story Content
+# **story_data.py — Story Content**
 
-Purpose
+## **Purpose**
+Holds **only story data**—no logic.
 
-Contains only story data, no logic.
-
-Structure
-```
+## **Structure**
+```python
 STORIES = {
   "Story Name": {
     "start": {
@@ -80,204 +79,147 @@ STORIES = {
   }
 }
 ```
-Concepts
 
-Node: a story state (text + choices)
-
-Choice: (label, next_node_id)
-
-Nodes whose IDs start with map_ are treated as hubs
-
-A choice labeled "Return to Map" jumps back to the last visited map node
-
-
+## **Concepts**
+- **Node:** a story state containing `text` + `choices`
+- **Choice:** tuple `(label, next_node_id)`
+- Node IDs starting with **map_** act as navigation hubs  
+- The special choice label **"Return to Map"** jumps back to the most recently visited map node
 
 ---
 
-st7789.py – LCD Driver
+# **st7789.py — LCD Driver**
 
-Purpose
+## **Purpose**
+RAM‑efficient SPI driver for the **ST7789 LCD**, optimized for the Pico’s limited memory.
 
-Low‑RAM SPI driver for the ST7789 LCD.
+## **Key Characteristics**
+- No full‑screen framebuffer  
+- Draws directly to hardware  
+- Very low RAM usage  
 
-Key Characteristics
-
-No full‑screen framebuffer
-
-Draws directly to the display
-
-Efficient for Pico’s limited RAM
-
-
-Important Methods
-
-fill(color) – clear screen
-
-fill_rect(x, y, w, h, color) – draw rectangles (core primitive)
-
-text(str, x, y, color) – small text drawing
-
-show() – usually a no‑op (no framebuffer)
-
-
+## **Important Methods**
+- `fill(color)` — clear the screen  
+- `fill_rect(x, y, w, h, color)` — draw rectangles  
+- `text(str, x, y, color)` — draw small text  
+- `show()` — typically a no‑op (no framebuffer)
 
 ---
 
-wifi_buttons.py – Phone Web UI
+# **wifi_buttons.py — Phone Web UI**
 
-Purpose
+## **Purpose**
+Provides:
+- A **Wi‑Fi access point**
+- A **minimal HTTP server**
+- A bridge converting **web button taps → events**
 
-Turns the Pico W into:
-
-A Wi‑Fi access point
-
-A tiny HTTP server
-
-A button‑to‑event bridge
-
-
-Public API (used by main.py)
-```
+## **Public API (used by main.py)**
+```python
 wifi.set_choices(["Go left", "Go right"])
 wifi.set_paging(page, pages)
 wifi.set_screen_info(title, subtitle, can_back)
 ```
-HTTP Endpoints
 
-URL	Meaning	Event Returned
-```
-/	Show control UI	None
-/c?i=N	Choice button	{type:"choice", index:N}
-/page?dir=-1	Previous page	{type:"page", dir:-1}
-/page?dir=1	Next page	{type:"page", dir:1}
-/back	Back	{type:"back"}
-/refresh	Restart	{type:"refresh"}
-```
+## **HTTP Endpoints**
 
-Key Idea
+| URL           | Meaning            | Event Returned |
+|---------------|--------------------|----------------|
+| `/`           | Show control UI    | None |
+| `/c?i=N`      | Choice button      | `{type:"choice", index:N}` |
+| `/page?dir=-1`| Previous page      | `{type:"page", dir:-1}` |
+| `/page?dir=1` | Next page          | `{type:"page", dir:1}` |
+| `/back`       | Back               | `{type:"back"}` |
+| `/refresh`    | Restart            | `{type:"refresh"}` |
 
-The web page is stateless UI. All real state lives in main.py.
-
-
----
-
-main.py – Application Logic
-
-Responsibilities
-
-Hardware setup (SPI, LCD)
-
-Story navigation
-
-Text wrapping and paging
-
-Rendering to LCD
-
-Handling web events
-
-
-Core Components
-
-StoryEngine
-
-Tracks current node_id
-
-Maintains history stack for Back
-
-Remembers last map_ node
-
-
-Pager
-
-Wraps text into lines
-
-Groups lines into pages
-
-Tracks current page index
-
-
-Renderer
-
-Draws header, story text, footer
-
-Uses scaled text for readability
-
-
+### **Key Idea**
+The browser UI is **stateless**;  
+all real state exists in **main.py**.
 
 ---
 
-Event Loop (Core Logic)
-``
+# **main.py — Application Logic**
+
+## **Responsibilities**
+- Configure hardware (SPI, LCD)
+- Navigate story nodes
+- Wrap and paginate text
+- Render story to LCD
+- Handle all web events
+
+## **Core Components**
+
+### **StoryEngine**
+- Tracks current node  
+- Maintains history for *Back*  
+- Remembers last `map_` node  
+
+### **Pager**
+- Wraps text lines  
+- Splits into pages  
+- Tracks page index  
+
+### **Renderer**
+- Draws header, body, footer  
+- Uses enlarged text for readability  
+
+---
+
+# **Event Loop (Core Logic)**
+
+```python
 while True:
     ev = wifi.poll()
     if ev:
         handle_event(ev)
         render(engine, pager)
         sync_web()
-``
-Event Handling
+```
 
-Event	Action
+## **Event Handling**
 
-choice	Move to next node
-page	Change page
-back	Pop history
-refresh	Reset story
-
-
-
----
-
-Text Rendering & Paging
-
-Text is wrapped by character count, not pixels
-
-Wrapped lines are chunked into pages
-
-Pager resets automatically when node changes
-
-
-This guarantees:
-
-Large readable text
-
-Consistent paging across LCD and web UI
-
-
+| Event | Action |
+|-------|---------|
+| `choice` | Move to next node |
+| `page` | Change page |
+| `back` | Pop history |
+| `refresh` | Reset story |
 
 ---
 
-Common Debug Notes
+# **Text Rendering & Paging**
 
-Buttons don’t respond → check poll() parsing
+- Wraps text by **character count**, not pixels  
+- Lines grouped into pages  
+- Pager resets when node changes  
 
-Need two taps → browser refresh timing
-
-Prev/Next missing → page count is 1
-
-Back missing → history stack empty
-
-
+### This ensures:
+- Large, readable text  
+- Consistent paging between LCD and web UI  
 
 ---
 
-One‑Sentence Summary
+# **Common Debug Tips**
 
-> “StoryPico is an event‑driven story engine where phone button presses are turned into events that update a paged story rendered on an ST7789 LCD.”
-
-
-
+- **Buttons unresponsive** → check `poll()` parsing  
+- **Requires two taps** → browser refresh timing issue  
+- **Prev/Next missing** → only one page  
+- **Back missing** → history stack is empty  
 
 ---
 
-Author Notes
+# **One‑Sentence Summary**
 
-This project demonstrates:
+> **“StoryPico is an event‑driven story engine where phone button presses become events that update a paged narrative on an ST7789 LCD.”**
 
-Event‑driven design on microcontrollers
+---
 
-Low‑RAM graphics techniques
+# **Author Notes**
 
-Separation of content and logic
+This project highlights:
+- Event‑driven microcontroller design  
+- Low‑RAM graphics rendering  
+- Strong separation of content & logic  
+- Lightweight, practical embedded web UI  
 
-Practical embedded web UI design
+---
