@@ -21,18 +21,18 @@ This design cleanly separates content, logic, UI, and hardware drivers.
 ---
 
 File Structure
-
+```
 StoryPico/
 ├── main.py          # Application logic & event loop
 ├── story_data.py    # Story graph (content only)
 ├── wifi_buttons.py  # Phone web UI + HTTP server
 └── st7789.py        # LCD display driver
-
+```
 
 ---
 
 High‑Level Architecture
-
+```
 Phone (Safari/Browser)
         │
         ▼
@@ -50,7 +50,7 @@ Phone (Safari/Browser)
         ▼
   ST7789 LCD Display
 
-
+```
 ---
 
 story_data.py – Story Content
@@ -60,7 +60,7 @@ Purpose
 Contains only story data, no logic.
 
 Structure
-
+```
 STORIES = {
   "Story Name": {
     "start": {
@@ -79,7 +79,7 @@ STORIES = {
     }
   }
 }
-
+```
 Concepts
 
 Node: a story state (text + choices)
@@ -137,22 +137,22 @@ A button‑to‑event bridge
 
 
 Public API (used by main.py)
-
+```
 wifi.set_choices(["Go left", "Go right"])
 wifi.set_paging(page, pages)
 wifi.set_screen_info(title, subtitle, can_back)
-
+```
 HTTP Endpoints
 
 URL	Meaning	Event Returned
-
+```
 /	Show control UI	None
 /c?i=N	Choice button	{type:"choice", index:N}
 /page?dir=-1	Previous page	{type:"page", dir:-1}
 /page?dir=1	Next page	{type:"page", dir:1}
 /back	Back	{type:"back"}
 /refresh	Restart	{type:"refresh"}
-
+```
 
 Key Idea
 
@@ -207,14 +207,14 @@ Uses scaled text for readability
 ---
 
 Event Loop (Core Logic)
-
+``
 while True:
     ev = wifi.poll()
     if ev:
         handle_event(ev)
         render(engine, pager)
         sync_web()
-
+``
 Event Handling
 
 Event	Action
