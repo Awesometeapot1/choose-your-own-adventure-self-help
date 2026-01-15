@@ -1,7 +1,4 @@
 # story_data.py
-# Field of Kindness: map hub + weather/mood + daily check-in + characters
-# + Hare's Burrow Memory Rooms (Green/Amber/Red quick access)
-
 STORIES = {
     "into the woods": {
 
@@ -10,8 +7,8 @@ STORIES = {
         # =========================================================
         "start": {
             "text": (
-                "You arrive at the edge of a wide field.\n"
-                "grass sprouts from the ground like blades.\n\n"
+                "You arrive at the edge of a quiet field.\n"
+                "grass sprouts from the ground like ribbons.\n\n"
                 "Before you go further, you stop.\n"
                 "What kind of day is it?\n\n"
                 "Quick access:\n"
@@ -33,8 +30,8 @@ STORIES = {
         "map_sunny": {
             "text": (
                 "MAP — SUNNY DAY\n\n"
-                "Sunlight warms your shoulders.\n"
-                "The sky is clear. You can breathe.\n\n"
+                "Sunlight shines softly onto you.\n"
+                "The sky is a deep blue. Existing isnt hard.\n\n"
                 "Where do you go?"
             ),
             "choices": [
@@ -42,7 +39,7 @@ STORIES = {
                 ("East: River (Otter / soothing)", "otter_intro"),
                 ("South: Hedge (Hedgehog / shutdown)", "hedgehog_intro"),
                 ("West: Stones (Badger / boundaries)", "badger_intro"),
-                ("Center: Big Tree (Rabbit, Hare, Robin)", "tree_hub"),
+                ("Center: Big Tree (Rabbit, Hare, Robin, fox, owl)", "tree_hub"),
                 ("Daily Check-In", "checkin_intro"),
                 ("Memory Rooms (Hare’s Burrow)", "burrow_hare"),
                 ("Change day/weather", "start"),
@@ -52,8 +49,8 @@ STORIES = {
         "map_cloudy": {
             "text": (
                 "MAP — CLOUDY DAY\n\n"
-                "The light is softer today.\n"
-                "Everything feels slower, a little heavier.\n\n"
+                "its darker now.\n"
+                "the slow drawl of time sits with you.\n\n"
                 "Where do you go?"
             ),
             "choices": [
@@ -61,7 +58,7 @@ STORIES = {
                 ("East: River (Otter / soothing)", "otter_intro"),
                 ("South: Hedge (Hedgehog / shutdown)", "hedgehog_intro"),
                 ("West: Stones (Badger / boundaries)", "badger_intro"),
-                ("Center: Big Tree (Rabbit, Hare, Robin)", "tree_hub"),
+                ("Center: Big Tree (Rabbit, Hare, Robin, fox, owl)", "tree_hub"),
                 ("Daily Check-In", "checkin_intro"),
                 ("Memory Rooms (Hare’s Burrow)", "burrow_hare"),
                 ("Change day/weather", "start"),
@@ -71,8 +68,8 @@ STORIES = {
         "map_rainy": {
             "text": (
                 "MAP — RAINY DAY\n\n"
-                "Rain taps the leaves.\n"
-                "The grass is cool, and your chest feels tender.\n\n"
+                "Rain sprinkles from the sky .\n"
+                "The grass is cool, and you feel a pain in your chest.\n\n"
                 "Where do you go?"
             ),
             "choices": [
@@ -80,7 +77,7 @@ STORIES = {
                 ("East: River (Otter / soothing)", "otter_intro"),
                 ("South: Hedge (Hedgehog / shutdown)", "hedgehog_intro"),
                 ("West: Stones (Badger / boundaries)", "badger_intro"),
-                ("Center: Big Tree (Rabbit, Hare, Robin)", "tree_hub"),
+                ("Center: Big Tree (Rabbit, Hare, Robin, fox, owl)", "tree_hub"),
                 ("Daily Check-In", "checkin_intro"),
                 ("Memory Rooms (Hare’s Burrow)", "burrow_hare"),
                 ("Change day/weather", "start"),
@@ -90,8 +87,8 @@ STORIES = {
         "map_windy": {
             "text": (
                 "MAP — WINDY DAY\n\n"
-                "Wind pulls at the grass.\n"
-                "Your thoughts keep moving, even when you want them to stop.\n\n"
+                "Wind whispers its cool breath.\n"
+                "Your thoughts keep moving, not able to stop.\n\n"
                 "Where do you go?"
             ),
             "choices": [
@@ -99,7 +96,7 @@ STORIES = {
                 ("East: River (Otter / soothing)", "otter_intro"),
                 ("South: Hedge (Hedgehog / shutdown)", "hedgehog_intro"),
                 ("West: Stones (Badger / boundaries)", "badger_intro"),
-                ("Center: Big Tree (Rabbit, Hare, Robin)", "tree_hub"),
+                ("Center: Big Tree (Rabbit, Hare, Robin, fox, owl)", "tree_hub"),
                 ("Daily Check-In", "checkin_intro"),
                 ("Memory Rooms (Hare’s Burrow)", "burrow_hare"),
                 ("Change day/weather", "start"),
@@ -114,14 +111,15 @@ STORIES = {
                 "CENTER — THE BIG TREE\n\n"
                 "Rabbit sits with calm attention.\n"
                 "Hare looks like it’s halfway into tomorrow.\n"
-                "A robin watches you with gentle care—like your mum.\n\n"
-                "There’s also a fox trail nearby.\n\n"
+                "A robin watches you with gentle care.\n\n"
+                "a fox trail nearby.\n\n"
+		    "an owl snoozes on a branch.\n\n"
                 "Who do you go to?"
             ),
             "choices": [
                 ("Rabbit (feelings + compassion)", "rabbit_intro"),
                 ("Hare (overthinking + next step)", "hare_intro"),
-                ("Robin (support / mum energy)", "robin_intro"),
+                ("Robin (support)", "robin_intro"),
                 ("Fox (inner critic)", "fox_intro"),
                 ("Return to Map", "Return to Map"),
             ],
@@ -437,7 +435,7 @@ STORIES = {
         "hare_thoughts": {
             "text": (
                 "Say:\n"
-                "“I’m having the thought that ____.”\n\n"
+                "“I’m having lots of difficult thoughts.”\n\n"
                 "It creates space.\n"
                 "You can notice thoughts without obeying them.\n\n"
                 "THE END (skill learned)."
